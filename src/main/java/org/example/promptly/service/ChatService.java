@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ChatService {
@@ -34,7 +31,11 @@ public class ChatService {
 
     public ChatResponse chat(ChatRequest request) {
 
-        List<ChatMessage> history = conversationMemory.getHistory(request.getSessionId());
+        String sessionId = (request.getSessionId() != null && !request.getSessionId().isBlank())
+                ? request.getSessionId()
+                : UUID.randomUUID().toString();
+
+        List<ChatMessage> history = conversationMemory.getHistory(sessionId);
 
         history.add(new ChatMessage("user", request.getMessage()));
 
@@ -51,9 +52,9 @@ public class ChatService {
         String reply = extractReply(response);
 
         history.add(new ChatMessage("assistant", reply));
-        conversationMemory.save(request.getSessionId(), history);
+        conversationMemory.save(sessionId, history);
 
-        return new ChatResponse(reply);
+        return new ChatResponse(sessionId, reply);
     }
 
     private String extractReply(Map response) {

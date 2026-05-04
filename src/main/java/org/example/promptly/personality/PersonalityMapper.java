@@ -16,6 +16,9 @@ public class PersonalityMapper {
     private static final String DEFAULT_PROMPT = "You are a helpful assistant.";
 
     public String getSystemPrompt(String personality) {
+        if (personality == null) {
+            return DEFAULT_PROMPT;
+        }
         return PERSONALITIES.getOrDefault(personality.toLowerCase(), DEFAULT_PROMPT);
     }
 }

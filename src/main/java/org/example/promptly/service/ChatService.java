@@ -1,0 +1,73 @@
+package org.example.promptly.service;
+
+import org.example.promptly.memory.ConversationMemory;
+import org.example.promptly.model.ChatMessage;
+import org.example.promptly.model.ChatRequest;
+import org.example.promptly.model.ChatResponse;
+import org.example.promptly.personality.PersonalityMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class ChatService {
+
+    private final RestClient restClient;
+    private final ConversationMemory conversationMemory;
+    private final PersonalityMapper personalityMapper;
+
+    @Value("${ai.model}")
+    private String model;
+
+    public ChatService(RestClient restClient,
+                       ConversationMemory conversationMemory,
+                       PersonalityMapper personalityMapper) {
+        this.restClient = restClient;
+        this.conversationMemory = conversationMemory;
+        this.personalityMapper = personalityMapper;
+    }
+
+    public ChatResponse chat(ChatRequest request) {
+
+        List<ChatMessage> history = conversationMemory.getHistory(request.getSessionId());
+
+        history.add(new ChatMessage("user", request.getMessage()));
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("model", model);
+        body.put("messages", buildMessages(request.getPersonality(), history));
+
+        Map response = restClient.post()
+                .uri("/chat/completions")
+                .body(body)
+                .retrieve()
+                .body(Map.class);
+
+        String reply = extractReply(response);
+
+        history.add(new ChatMessage("assistant", reply));
+        conversationMemory.save(request.getSessionId(), history);
+
+        return new ChatResponse(reply);
+    }
+
+    private String extractReply(Map response) {
+        List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
+        Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+        return (String) message.get("content");
+    }
+
+    private List<Map<String, String>> buildMessages(String personality, List<ChatMessage> history) {
+        List<Map<String, String>> messages = new ArrayList<>();
+        messages.add(Map.of("role", "system", "content", personalityMapper.getSystemPrompt(personality)));
+        for (ChatMessage msg : history) {
+            messages.add(Map.of("role", msg.getRole(), "content", msg.getContent()));
+        }
+        return messages;
+    }
+}

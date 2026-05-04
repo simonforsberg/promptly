@@ -1,5 +1,6 @@
 package org.example.promptly.service;
 
+import lombok.RequiredArgsConstructor;
 import org.example.promptly.memory.ConversationMemory;
 import org.example.promptly.model.ChatMessage;
 import org.example.promptly.model.ChatRequest;
@@ -12,6 +13,7 @@ import org.springframework.web.client.RestClient;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ChatService {
 
     private final RestClient restClient;
@@ -21,16 +23,7 @@ public class ChatService {
     @Value("${ai.model}")
     private String model;
 
-    public ChatService(RestClient restClient,
-                       ConversationMemory conversationMemory,
-                       PersonalityMapper personalityMapper) {
-        this.restClient = restClient;
-        this.conversationMemory = conversationMemory;
-        this.personalityMapper = personalityMapper;
-    }
-
     public ChatResponse chat(ChatRequest request) {
-
         String sessionId = (request.getSessionId() != null && !request.getSessionId().isBlank())
                 ? request.getSessionId()
                 : UUID.randomUUID().toString();

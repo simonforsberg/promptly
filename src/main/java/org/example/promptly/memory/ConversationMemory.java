@@ -4,6 +4,7 @@ import org.example.promptly.model.ChatMessage;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,12 +18,23 @@ public class ConversationMemory {
         if (sessionId == null || sessionId.isBlank()) {
             return new ArrayList<>();
         }
-        return new ArrayList<>(memory.getOrDefault(sessionId, new ArrayList<>()));
+        List<ChatMessage> history = memory.get(sessionId);
+        if (history == null) {
+            return List.of();
+        }
+        synchronized (history) {
+            return List.copyOf(history);
+        }
     }
 
-    public void save(String sessionId, List<ChatMessage> history) {
-        if (sessionId != null && !sessionId.isBlank()) {
-            memory.put(sessionId, history);
+    public void append(String sessionId, ChatMessage message) {
+        if (sessionId == null || sessionId.isBlank()) {
+            return;
         }
+        if (message == null) {
+            throw new IllegalArgumentException("message must not be null");
+        }
+        memory.computeIfAbsent(sessionId, k -> Collections.synchronizedList(new ArrayList<>()))
+                .add(message);
     }
 }

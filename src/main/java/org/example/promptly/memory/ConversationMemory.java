@@ -17,12 +17,13 @@ public class ConversationMemory {
         if (sessionId == null || sessionId.isBlank()) {
             return new ArrayList<>();
         }
-        return new ArrayList<>(memory.getOrDefault(sessionId, new ArrayList<>()));
+        return memory.getOrDefault(sessionId, new ArrayList<>());
     }
 
-    public void save(String sessionId, List<ChatMessage> history) {
-        if (sessionId != null && !sessionId.isBlank()) {
-            memory.put(sessionId, history);
+    public void append(String sessionId, ChatMessage message) {
+        if (sessionId == null || sessionId.isBlank()) {
+            return;
         }
+        memory.computeIfAbsent(sessionId, k -> new ArrayList<>()).add(message);
     }
 }

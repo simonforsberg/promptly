@@ -31,8 +31,15 @@ public class AiClient {
 
     private String extractContent(AiApiResponse response) {
         if (response == null || response.choices() == null || response.choices().isEmpty()) {
-            throw new RuntimeException("Invalid AI response");
+            throw new RuntimeException("No choices in AI response");
         }
-        return response.choices().getFirst().message().content();
+        AiApiResponse.Choice firstChoice = response.choices().getFirst();
+        if (firstChoice.message() == null || firstChoice.message().content() == null) {
+            throw new RuntimeException("Missing message or content in AI response");
+        }
+        if (firstChoice.message().content().isBlank()) {
+            throw new RuntimeException("AI response content is blank");
+        }
+        return firstChoice.message().content();
     }
 }

@@ -24,9 +24,7 @@ public class ChatService {
     private String model;
 
     public ChatResponse chat(ChatRequest request) {
-        String sessionId = (request.getSessionId() != null && !request.getSessionId().isBlank())
-                ? request.getSessionId()
-                : UUID.randomUUID().toString();
+        String sessionId = resolveSessionId(request);
 
         List<ChatMessage> history = conversationMemory.getHistory(sessionId);
 
@@ -50,9 +48,19 @@ public class ChatService {
         return new ChatResponse(sessionId, reply);
     }
 
+    private String resolveSessionId(ChatRequest request) {
+        return (request.getSessionId() != null && !request.getSessionId().isBlank())
+                ? request.getSessionId()
+                : UUID.randomUUID().toString();
+    }
+
     private String extractReply(Map response) {
         List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
+        if (choices == null || choices.isEmpty()) {
+            throw new RuntimeException("Invalid AI response");
+        }
         Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+
         return (String) message.get("content");
     }
 

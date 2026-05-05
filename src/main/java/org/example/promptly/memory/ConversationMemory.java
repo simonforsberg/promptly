@@ -17,7 +17,7 @@ public class ConversationMemory {
         if (sessionId == null || sessionId.isBlank()) {
             return new ArrayList<>();
         }
-        return memory.getOrDefault(sessionId, new ArrayList<>());
+        return new ArrayList<>(memory.getOrDefault(sessionId, new ArrayList<>()));
     }
 
     public void save(String sessionId, List<ChatMessage> history) {

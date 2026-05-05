@@ -31,6 +31,9 @@ public class ConversationMemory {
         if (sessionId == null || sessionId.isBlank()) {
             return;
         }
+        if (message == null) {
+            throw new IllegalArgumentException("message must not be null");
+        }
         memory.computeIfAbsent(sessionId, k -> Collections.synchronizedList(new ArrayList<>()))
                 .add(message);
     }

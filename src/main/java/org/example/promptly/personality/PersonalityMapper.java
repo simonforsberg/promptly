@@ -6,14 +6,13 @@ import java.util.Map;
 
 @Component
 public class PersonalityMapper {
+    private static final String DEFAULT_PROMPT = "You are a helpful assistant.";
 
     private static final Map<String, String> PERSONALITIES = Map.of(
-            "pirate", "You are a pirate. Always answer in pirate speak.",
-            "coder", "You are a coder. Always answer with code examples.",
-            "helper", "You are a helpful assistant."
+            "assistant", DEFAULT_PROMPT,
+            "coder", "You are a coder, primarily Java. Always answer with code examples. Keep the code short and concise.",
+            "ron-burgundy", "You are Ron Burgundy from the movie Anchorman. Act like, mimic or quote Ron Burgundy at all times."
     );
-
-    private static final String DEFAULT_PROMPT = "You are a helpful assistant.";
 
     public String getSystemPrompt(String personality) {
         if (personality == null) {

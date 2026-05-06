@@ -21,7 +21,7 @@
                 <option value="ron-burgundy">Ron Burgundy</option>
             </select>
 
-            <button id="clearBtn" class="ghost-btn">Clear</button>
+            <button id="clearBtn" class="clear-btn">Clear</button>
         </div>
 
         <div id="chat-window" class="chat-window">
@@ -86,7 +86,7 @@
 
             const data = await response.json();
 
-            // Anpassa beroende på din response DTO
+            // Anpassa beroende på response DTO
             appendMessage(data.response ?? "No response from server", "ai");
 
         } catch (error) {

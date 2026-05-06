@@ -124,8 +124,7 @@ body {
     opacity: 0.9;
 }
 
-/* Clear - Ghost Button */
-.ghost-btn {
+.clear-btn {
     background: transparent;
     border: 1px solid var(--border);
     color: var(--muted);
@@ -134,7 +133,7 @@ body {
     cursor: pointer;
 }
 
-.ghost-btn:hover {
+.clear-btn:hover {
     border-color: var(--primary);
     color: var(--text);
 }

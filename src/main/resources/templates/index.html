@@ -54,7 +54,7 @@
     function appendMessage(text, sender) {
         const div = document.createElement("div");
         div.classList.add("message", sender);
-        div.textContent = text;
+        div.innerHTML = marked.parse(text);
 
         chatWindow.appendChild(div);
         chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -104,9 +104,9 @@
     });
 </script>
 
-<script src="/js/app.js">
+<script src="/js/app.js"></script>
 
-</script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 </body>
 </html>

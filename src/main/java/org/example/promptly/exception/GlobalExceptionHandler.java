@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.RestClientException;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
         return new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error",
                 "An unexpected error occurred",
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
                 .orElse("Validation error");
 
         return new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 "Bad Request",
                 message,
@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     public ErrorResponse handleRestClientException(RestClientException ex, HttpServletRequest request) {
         return new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.SERVICE_UNAVAILABLE.value(),
                 "AI Service Unavailable",
                 "Failed to communicate with AI service",
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_GATEWAY)
     public ErrorResponse handleChatServiceException(ChatServiceException ex, HttpServletRequest request) {
         return new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.BAD_GATEWAY.value(),
                 "AI Error",
                 ex.getMessage(),

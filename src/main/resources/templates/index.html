@@ -3,110 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Promptly AI</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
 <div class="app-container">
-
     <div class="chat-card">
 
         <div class="chat-header">
             <h1>Promptly</h1>
-
             <select id="personality">
                 <option value="assistant">Assistant</option>
                 <option value="coder">Java developer</option>
                 <option value="ron-burgundy">Ron Burgundy</option>
             </select>
-
             <button id="clearBtn" class="clear-btn">Clear</button>
         </div>
 
         <div id="chat-window" class="chat-window">
-            <!-- Messages will go here -->
             <div class="message ai">Hello 👋 How can I help you?</div>
         </div>
 
         <div class="chat-input">
-            <input id="messageInput" type="text" placeholder="Write a message..."/>
+            <input id="messageInput" type="text" placeholder="Write a message...">
             <button id="sendBtn">Send</button>
         </div>
 
     </div>
-
 </div>
 
-<script>
-    const chatWindow = document.getElementById("chat-window");
-    const input = document.getElementById("messageInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const personalitySelect = document.getElementById("personality");
-
-    // Enkel session (persist i browser)
-    let sessionId = localStorage.getItem("sessionId");
-    if (!sessionId) {
-        sessionId = crypto.randomUUID();
-        localStorage.setItem("sessionId", sessionId);
-    }
-
-    function appendMessage(text, sender) {
-        const div = document.createElement("div");
-        div.classList.add("message", sender);
-        div.innerHTML = marked.parse(text);
-
-        chatWindow.appendChild(div);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-
-    async function sendMessage() {
-        const message = input.value.trim();
-        if (!message) return;
-
-        appendMessage(message, "user");
-        input.value = "";
-
-        try {
-            const response = await fetch("/api/v1/chat", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    personality: personalitySelect.value,
-                    message: message,
-                    sessionId: sessionId
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error("API error: " + response.status);
-            }
-
-            const data = await response.json();
-
-            // Anpassa beroende på response DTO
-            appendMessage(data.response ?? "No response from server", "ai");
-
-        } catch (error) {
-            console.error(error);
-            appendMessage("Something went wrong. Try again.", "ai");
-        }
-    }
-
-    sendBtn.addEventListener("click", sendMessage);
-
-    input.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
-            sendMessage();
-        }
-    });
-</script>
-
-<script src="/js/app.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script th:src="@{/js/app.js}"></script>
 
 </body>
 </html>

@@ -7,7 +7,6 @@ import org.example.promptly.model.ChatResponse;
 import org.example.promptly.service.ChatService;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor

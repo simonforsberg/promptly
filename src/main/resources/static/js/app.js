@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function appendMessage(text, sender) {
         const div = document.createElement("div");
         div.classList.add("message", sender);
-        div.innerHTML = marked.parse(text);
+        div.innerHTML = DOMPurify.sanitize(marked.parse(text));
         chatWindow.appendChild(div);
 
         div.querySelectorAll("pre code").forEach((block) => {

@@ -1,5 +1,6 @@
 package org.example.promptly.ai;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.example.promptly.exception.ChatServiceException;
 import org.example.promptly.model.ChatMessage;
@@ -18,6 +19,7 @@ public class AiClient {
     @Value("${ai.model}")
     private String model;
 
+    @Retry(name = "aiClient", fallbackMethod = "fallbackReply")
     public String generateReply(List<ChatMessage> messages) {
         AiApiRequest request = new AiApiRequest(model, messages);
 
@@ -28,6 +30,10 @@ public class AiClient {
                 .body(AiApiResponse.class);
 
         return extractContent(response);
+    }
+
+    private String fallbackReply(List<ChatMessage> messages, Exception ex) {
+        throw new ChatServiceException("AI service is currently unavailable. Please try again later.");
     }
 
     private String extractContent(AiApiResponse response) {

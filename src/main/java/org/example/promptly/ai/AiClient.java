@@ -1,6 +1,7 @@
 package org.example.promptly.ai;
 
 import lombok.RequiredArgsConstructor;
+import org.example.promptly.exception.ChatServiceException;
 import org.example.promptly.model.ChatMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -31,14 +32,14 @@ public class AiClient {
 
     private String extractContent(AiApiResponse response) {
         if (response == null || response.choices() == null || response.choices().isEmpty()) {
-            throw new RuntimeException("No choices in AI response");
+            throw new ChatServiceException("No response from AI service");
         }
         AiApiResponse.Choice firstChoice = response.choices().getFirst();
         if (firstChoice.message() == null || firstChoice.message().content() == null) {
-            throw new RuntimeException("Missing message or content in AI response");
+            throw new ChatServiceException("Invalid AI response structure");
         }
         if (firstChoice.message().content().isBlank()) {
-            throw new RuntimeException("AI response content is blank");
+            throw new ChatServiceException("AI returned empty response");
         }
         return firstChoice.message().content();
     }

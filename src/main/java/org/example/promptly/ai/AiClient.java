@@ -33,11 +33,11 @@ public class AiClient {
                 .retrieve()
                 .onStatus(s -> s.value() == 429 || s.value() == 503,
                         (_, resp) -> {
-                            throw new RetryableHttpException();
+                            throw new RetryableHttpException("Retryable HTTP error: " + resp.getStatusCode());
                         })
                 .onStatus(s -> s.value() == 401 || s.value() == 400,
                         (_, resp) -> {
-                            throw new NonRetryableHttpException();
+                            throw new NonRetryableHttpException("Non-retryable HTTP error: " + resp.getStatusCode());
                         })
                 .body(AiApiResponse.class);
 

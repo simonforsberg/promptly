@@ -18,7 +18,9 @@ import java.util.List;
 
 @SpringBootTest(properties = {
         "ai.api-key=test-key",
-        "ai.base-url=${wiremock.server.baseUrl}"
+        "ai.base-url=${wiremock.server.baseUrl}",
+        "resilience4j.retry.instances.aiClient.wait-duration=10ms",
+        "resilience4j.circuitbreaker.instances.aiClient.wait-duration-in-open-state=200ms"
 })
 @EnableWireMock
 class AiClientTest {
@@ -103,7 +105,7 @@ class AiClientTest {
         verify(0, postRequestedFor(urlEqualTo("/chat/completions")));
 
         // Vänta tills Circuit Breaker blir HALF-OPEN
-        Thread.sleep(6000);
+        Thread.sleep(300);
 
         stubFor(post(urlEqualTo("/chat/completions"))
                 .willReturn(aResponse()

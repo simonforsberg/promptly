@@ -1,8 +1,11 @@
 package org.example.promptly.ai;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.example.promptly.exception.ChatServiceException;
+import org.example.promptly.exception.NonRetryableHttpException;
+import org.example.promptly.exception.RetryableHttpException;
 import org.example.promptly.model.ChatMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -19,7 +22,8 @@ public class AiClient {
     @Value("${ai.model}")
     private String model;
 
-    @Retry(name = "aiClient", fallbackMethod = "fallbackReply")
+    @CircuitBreaker(name = "aiClient", fallbackMethod = "fallbackReply")
+    @Retry(name = "aiClient")
     public String generateReply(List<ChatMessage> messages) {
         AiApiRequest request = new AiApiRequest(model, messages);
 
@@ -27,6 +31,14 @@ public class AiClient {
                 .uri("/chat/completions")
                 .body(request)
                 .retrieve()
+                .onStatus(s -> s.value() == 429 || s.value() == 503,
+                        (_, resp) -> {
+                            throw new RetryableHttpException();
+                        })
+                .onStatus(s -> s.value() == 401 || s.value() == 400,
+                        (_, resp) -> {
+                            throw new NonRetryableHttpException();
+                        })
                 .body(AiApiResponse.class);
 
         return extractContent(response);

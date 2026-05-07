@@ -1,7 +1,11 @@
 package org.example.promptly.ai;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.example.promptly.exception.ChatServiceException;
+import org.example.promptly.exception.NonRetryableHttpException;
+import org.example.promptly.exception.RetryableHttpException;
 import org.example.promptly.model.ChatMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -18,6 +22,8 @@ public class AiClient {
     @Value("${ai.model}")
     private String model;
 
+    @CircuitBreaker(name = "aiClient", fallbackMethod = "fallbackReply")
+    @Retry(name = "aiClient")
     public String generateReply(List<ChatMessage> messages) {
         AiApiRequest request = new AiApiRequest(model, messages);
 
@@ -25,9 +31,21 @@ public class AiClient {
                 .uri("/chat/completions")
                 .body(request)
                 .retrieve()
+                .onStatus(s -> s.value() == 429 || s.value() == 503,
+                        (_, resp) -> {
+                            throw new RetryableHttpException("Retryable HTTP error: " + resp.getStatusCode());
+                        })
+                .onStatus(s -> s.value() == 401 || s.value() == 400,
+                        (_, resp) -> {
+                            throw new NonRetryableHttpException("Non-retryable HTTP error: " + resp.getStatusCode());
+                        })
                 .body(AiApiResponse.class);
 
         return extractContent(response);
+    }
+
+    private String fallbackReply(List<ChatMessage> messages, Exception ex) {
+        throw new ChatServiceException("AI service is currently unavailable. Please try again later.");
     }
 
     private String extractContent(AiApiResponse response) {

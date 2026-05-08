@@ -2,6 +2,7 @@ package org.example.promptly.service;
 
 import org.example.promptly.ai.AiClient;
 import org.example.promptly.memory.ConversationMemory;
+import org.example.promptly.model.ChatMessage;
 import org.example.promptly.model.ChatRequest;
 import org.example.promptly.model.ChatResponse;
 import org.example.promptly.personality.PersonalityMapper;
@@ -16,6 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,6 +49,23 @@ class ChatServiceTest {
         // Assert
         assertEquals("Hello, how may I assist you today?", response.getReply());
         assertEquals("sessionId-1", response.getSessionId());
+    }
+
+    @Test
+    void shouldSaveMessageToConversationMemory_afterChat() {
+        // Arrange
+        ChatRequest request = new ChatRequest("sessionId-1", "assistant", "Hello");
+
+        when(conversationMemory.getHistory("sessionId-1")).thenReturn(List.of());
+        when(personalityMapper.getSystemPrompt("assistant")).thenReturn("You are a helpful assistant.");
+        when(aiClient.generateReply(anyList())).thenReturn("Hello, how may I assist you today?");
+
+        // Act
+        chatService.chat(request);
+
+        // Assert
+        verify(conversationMemory).append("sessionId-1", new ChatMessage("user", "Hello"));
+        verify(conversationMemory).append("sessionId-1", new ChatMessage("assistant", "Hello, how may I assist you today?"));
     }
 
     @Test

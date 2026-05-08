@@ -33,15 +33,21 @@ class ChatServiceTest {
     @InjectMocks
     private ChatService chatService;
 
+    private ChatRequest defaultRequest() {
+        return new ChatRequest("sessionId-1", "assistant", "Hello");
+    }
+
+    private void stubHappyPathFor(String sessionId) {
+        when(conversationMemory.getHistory(sessionId)).thenReturn(List.of());
+        when(personalityMapper.getSystemPrompt("assistant")).thenReturn("You are a helpful assistant.");
+        when(aiClient.generateReply(anyList())).thenReturn("Hello, how may I assist you today?");
+    }
 
     @Test
     void shouldReturnReply_whenChatIsCalled() {
         // Arrange
-        ChatRequest request = new ChatRequest("sessionId-1", "assistant", "Hello");
-
-        when(conversationMemory.getHistory("sessionId-1")).thenReturn(List.of());
-        when(personalityMapper.getSystemPrompt("assistant")).thenReturn("You are a helpful assistant.");
-        when(aiClient.generateReply(anyList())).thenReturn("Hello, how may I assist you today?");
+        ChatRequest request = defaultRequest();
+        stubHappyPathFor("sessionId-1");
 
         // Act
         ChatResponse response = chatService.chat(request);
@@ -54,11 +60,8 @@ class ChatServiceTest {
     @Test
     void shouldSaveMessageToConversationMemory_afterChat() {
         // Arrange
-        ChatRequest request = new ChatRequest("sessionId-1", "assistant", "Hello");
-
-        when(conversationMemory.getHistory("sessionId-1")).thenReturn(List.of());
-        when(personalityMapper.getSystemPrompt("assistant")).thenReturn("You are a helpful assistant.");
-        when(aiClient.generateReply(anyList())).thenReturn("Hello, how may I assist you today?");
+        ChatRequest request = defaultRequest();
+        stubHappyPathFor("sessionId-1");
 
         // Act
         chatService.chat(request);
@@ -71,11 +74,8 @@ class ChatServiceTest {
     @Test
     void shouldReturnExistingSessionId_whenSessionIdProvided() {
         // Arrange
-        ChatRequest request = new ChatRequest("sessionId-1", "assistant", "Hello");
-
-        when(conversationMemory.getHistory("sessionId-1")).thenReturn(List.of());
-        when(personalityMapper.getSystemPrompt("assistant")).thenReturn("You are a helpful assistant.");
-        when(aiClient.generateReply(anyList())).thenReturn("Hello, how may I assist you today?");
+        ChatRequest request = defaultRequest();
+        stubHappyPathFor("sessionId-1");
 
         // Act
         ChatResponse response = chatService.chat(request);

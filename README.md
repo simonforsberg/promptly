@@ -14,7 +14,7 @@ Built with **Java 25**, **Spring Boot 4**, **Maven**, and **OpenRouter**.
 - **Minimalistic Chat UI**: Simple web interface for interacting with the AI.
 - **RESTful API**: Clean API endpoints for integration.
 - **Session-based Memory**: Maintains conversation context using unique session IDs.
-- **Selectable Personalities**: Choose between different AI behaviors (Assistant, Coder, Ron Burgundy).
+- **Selectable Features and Personalities**: Choose between different AI behaviors (**Assistant**, **Coder**, **Ron Burgundy**).
 - **Resiliency**: Automatic retry with exponential backoff for network errors and rate limits.
 - **Thread-safe**: Robust session handling using `ConcurrentHashMap`.
 - **API Documentation**: Integrated OpenAPI/Swagger UI.
@@ -80,11 +80,11 @@ You can override default settings in `src/main/resources/application.properties`
 
 The `personality` field in the API request changes the system prompt:
 
-| Key            | Behavior                                                         |
-|----------------|------------------------------------------------------------------|
-| `assistant`    | Helpful and supportive assistant, answers clearly and concisely. |
-| `coder`        | Coding assistant and Java specialist, gives technical advice.    |
-| `ron-burgundy` | Chat with the legendary news anchor. Stay classy!                |
+| Key            | Role           | Behavior                                          |
+|----------------|----------------|---------------------------------------------------|
+| `assistant`    | Assistant      | Helpful and supportive assistant, answers clearly and concisely. |
+| `coder`        | Java Developer | Coding assistant and Java specialist, gives technical advice. |
+| `ron-burgundy` | Ron Burgundy   | Chat with the legendary news anchor. Stay classy! |
 
 ---
 

@@ -6,6 +6,7 @@ import java.util.Map;
 
 @Component
 public class PersonalityMapper {
+
     private static final String DEFAULT_PROMPT = "You are a helpful assistant.";
 
     private static final Map<String, String> PERSONALITIES = Map.of(

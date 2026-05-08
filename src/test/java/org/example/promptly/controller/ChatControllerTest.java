@@ -48,9 +48,12 @@ class ChatControllerTest {
         verify(chatService).chat(any());
     }
 
-
     @Test
-    void shouldReturn200_whenPersonalityIsUnknown() throws Exception {
+    void shouldReturn201_whenPersonalityIsUnknown() throws Exception {
+        ChatResponse response = new ChatResponse("sessionId-1", "Hello, how may I assist you today?");
+
+        when(chatService.chat(any())).thenReturn(response);
+
         mockMvc.perform(post("/api/v1/chat")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
@@ -60,7 +63,9 @@ class ChatControllerTest {
                                     "message": "Hello"
                                 }
                                 """))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.sessionId").value("sessionId-1"))
+                .andExpect(jsonPath("$.reply").value("Hello, how may I assist you today?"));
         verify(chatService).chat(any());
     }
 

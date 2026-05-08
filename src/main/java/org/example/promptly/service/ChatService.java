@@ -25,23 +25,23 @@ public class ChatService {
         List<ChatMessage> messages = buildMessages(request, sessionId);
         String reply = aiClient.generateReply(messages);
 
-        conversationMemory.append(sessionId, new ChatMessage("user", request.getMessage()));
+        conversationMemory.append(sessionId, new ChatMessage("user", request.message()));
         conversationMemory.append(sessionId, new ChatMessage("assistant", reply));
 
         return new ChatResponse(sessionId, reply);
     }
 
     private String resolveSessionId(ChatRequest request) {
-        return (request.getSessionId() != null && !request.getSessionId().isBlank())
-                ? request.getSessionId()
+        return (request.sessionId() != null && !request.sessionId().isBlank())
+                ? request.sessionId()
                 : UUID.randomUUID().toString();
     }
 
     private List<ChatMessage> buildMessages(ChatRequest request, String sessionId) {
         List<ChatMessage> messages = new ArrayList<>();
-        messages.add(new ChatMessage("system", personalityMapper.getSystemPrompt(request.getPersonality())));
+        messages.add(new ChatMessage("system", personalityMapper.getSystemPrompt(request.personality())));
         messages.addAll(conversationMemory.getHistory(sessionId));
-        messages.add(new ChatMessage("user", request.getMessage()));
+        messages.add(new ChatMessage("user", request.message()));
         return messages;
     }
 }

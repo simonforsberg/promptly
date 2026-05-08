@@ -53,8 +53,8 @@ class ChatServiceTest {
         ChatResponse response = chatService.chat(request);
 
         // Assert
-        assertEquals("Hello, how may I assist you today?", response.getReply());
-        assertEquals("sessionId-1", response.getSessionId());
+        assertEquals("Hello, how may I assist you today?", response.reply());
+        assertEquals("sessionId-1", response.sessionId());
     }
 
     @Test
@@ -81,7 +81,7 @@ class ChatServiceTest {
         ChatResponse response = chatService.chat(request);
 
         // Assert
-        assertEquals("sessionId-1", response.getSessionId());
+        assertEquals("sessionId-1", response.sessionId());
     }
 
     @Test
@@ -97,6 +97,6 @@ class ChatServiceTest {
         ChatResponse response = chatService.chat(request);
 
         // Assert
-        assertNotNull(response.getSessionId());
+        assertNotNull(response.sessionId());
     }
 }

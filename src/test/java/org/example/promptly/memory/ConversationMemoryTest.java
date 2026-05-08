@@ -30,8 +30,8 @@ class ConversationMemoryTest {
         List<ChatMessage> history = conversationMemory.getHistory(sessionId);
 
         assertEquals(1, history.size());
-        assertEquals("user", history.getFirst().getRole());
-        assertEquals("Hello!", history.getFirst().getContent());
+        assertEquals("user", history.getFirst().role());
+        assertEquals("Hello!", history.getFirst().content());
     }
 
     @Test

@@ -5,6 +5,8 @@ A Spring Boot middleware service that connects users to external AI APIs via Ope
 
 Built with **Java 25**, **Spring Boot 4**, **Maven**, and **OpenRouter**.
 
+![promptly-coder](promptly-coder.png)
+
 ---
 
 ## Features

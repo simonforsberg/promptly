@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
 
-            appendMessage(data.response ?? "No response from server", "ai");
+            appendMessage(data.reply ?? "No response from server", "ai");
 
         } catch (error) {
             console.error(error);

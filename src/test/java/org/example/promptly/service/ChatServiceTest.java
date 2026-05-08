@@ -44,7 +44,7 @@ class ChatServiceTest {
         ChatResponse response = chatService.chat(request);
 
         // Assert
-        assertEquals("Hello, how may I assist you today?", response.getResponse());
+        assertEquals("Hello, how may I assist you today?", response.getReply());
         assertEquals("sessionId-1", response.getSessionId());
     }
 }

@@ -74,6 +74,7 @@ You can override default settings in `src/main/resources/application.properties`
 | `ai.base-url`  | `AI_BASE_URL`        | LLM provider base URL    | `https://openrouter.ai/api/v1` |
 | `ai.api-key`   | `AI_API_KEY`         | OpenRouter API key       | *(required)*                   |
 | `ai.model`     | `AI_MODEL`           | AI model to use          | `openai/gpt-4o-mini`           |
+
 ---
 
 ## Personalities

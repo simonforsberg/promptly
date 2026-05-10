@@ -61,7 +61,7 @@ Run the `PromptlyApplication` class directly.
 
 ### 4. Access the application
 - **Chat UI**: [http://localhost:8080](http://localhost:8080)
-- **Swagger Documentation**: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+- **Swagger Documentation**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
 ---
 
@@ -80,11 +80,55 @@ You can override default settings in `src/main/resources/application.properties`
 
 The `personality` field in the API request changes the system prompt:
 
-| Key            | Role           | Behavior                                          |
-|----------------|----------------|---------------------------------------------------|
-| `assistant`    | Assistant      | Helpful and supportive assistant, answers clearly and concisely. |
-| `coder`        | Java Developer | Coding assistant and Java specialist, gives technical advice. |
-| `ron-burgundy` | Ron Burgundy   | Chat with the legendary news anchor. Stay classy! |
+| Key            | Role         | Behavior                                                         |
+|----------------|--------------|------------------------------------------------------------------|
+| `assistant`    | Assistant    | Helpful and supportive assistant, answers clearly and concisely. |
+| `coder`        | Coder        | Software engineer and coding assistant, gives technical advice.  |
+| `ron-burgundy` | Ron Burgundy | Chat with the legendary news anchor. Stay classy!                |
+
+---
+
+## Testing
+
+The project includes unit and integration tests using **JUnit 5**, **Mockito**, and **MockMvc**.
+
+### Running Tests
+To execute all tests, run:
+```bash
+./mvnw test
+```
+
+### Coverage
+- **Unit Tests**: Business logic, personality mapping, and conversation memory.
+- **Integration Tests**: API controllers and exception handling.
+- **Mocking**: Unit tests use **Mockito** to mock dependencies.
+  External API calls in integration tests are stubbed using **WireMock**.
+
+---
+
+## Error Handling
+
+Promptly uses a centralized exception handling mechanism with `GlobalExceptionHandler` to ensure consistent API responses.
+
+### Error Response Format
+All errors follow a standard structure:
+```json
+{
+  "timestamp": "2026-05-10T12:45:00Z",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Detailed error message",
+  "path": "/api/v1/chat"
+}
+```
+
+### Common Status Codes
+- **400 Bad Request**: Validation errors (e.g., missing message or personality).
+- **503 Service Unavailable**: AI service connection issues, communication errors, or circuit breaker activation.
+- **500 Internal Server Error**: Unexpected application errors.
+
+### Resiliency
+The service implements **automatic retries with exponential backoff** for transient network errors and rate limits (429 Too Many Requests) when communicating with the AI provider.
 
 ---
 
@@ -122,7 +166,7 @@ The `personality` field in the API request changes the system prompt:
 ```
 
 **Error Response (503 Service Unavailable):**
-Occurs when the AI service is unreachable after retries or when the circuit breaker is open.
+Occurs when the AI service is unreachable, communication fails, or when the circuit breaker is open.
 ```json
 {
   "timestamp": "2026-05-08T17:25:00Z",

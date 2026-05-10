@@ -52,19 +52,19 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(
                 Instant.now(),
                 HttpStatus.SERVICE_UNAVAILABLE.value(),
-                "AI Service Unavailable",
+                "AI service connection failed",
                 "Failed to communicate with AI service",
                 request.getRequestURI()
         );
     }
 
     @ExceptionHandler(ChatServiceException.class)
-    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     public ErrorResponse handleChatServiceException(ChatServiceException ex, HttpServletRequest request) {
         return new ErrorResponse(
                 Instant.now(),
-                HttpStatus.BAD_GATEWAY.value(),
-                "AI Error",
+                HttpStatus.SERVICE_UNAVAILABLE.value(),
+                "AI Service Unavailable",
                 ex.getMessage(),
                 request.getRequestURI()
         );

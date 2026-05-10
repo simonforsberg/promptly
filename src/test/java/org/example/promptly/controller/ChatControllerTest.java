@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import org.example.promptly.exception.ChatServiceException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -116,5 +117,24 @@ class ChatControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn503_whenChatServiceExceptionIsThrown() throws Exception {
+        when(chatService.chat(any())).thenThrow(new ChatServiceException("AI service is currently unavailable. Please try again later."));
+
+        mockMvc.perform(post("/api/v1/chat")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                    "sessionId": "sessionId-1",
+                                    "personality": "assistant",
+                                    "message": "Hello"
+                                }
+                                """))
+                .andExpect(status().isServiceUnavailable())
+                .andExpect(jsonPath("$.status").value(503))
+                .andExpect(jsonPath("$.error").value("AI Service Unavailable"))
+                .andExpect(jsonPath("$.message").value("AI service is currently unavailable. Please try again later."));
     }
 }

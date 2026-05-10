@@ -33,22 +33,22 @@ Built with **Java 25**, **Spring Boot 4**, **Maven**, and **OpenRouter**.
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/promptly.git
+git clone https://github.com/simonforsberg/promptly.git
 cd promptly
 ```
 
 ### 2. Configure Environment Variables
-The application requires an `OPENAI_API_KEY` to communicate with OpenRouter.
+The application requires an `AI_API_KEY` to communicate with OpenRouter.
 
 **Terminal:**
 ```bash
-export OPENAI_API_KEY=your_api_key_here
+export AI_API_KEY=your_api_key_here
 ```
 
 **IntelliJ IDEA:**
 1. Go to `Run` -> `Edit Configurations`.
 2. Select `PromptlyApplication`.
-3. Add `OPENAI_API_KEY=your_api_key_here` to **Environment variables**.
+3. Add `AI_API_KEY=your_api_key_here` to **Environment variables**.
 
 ### 3. Run the application
 **Maven Wrapper:**
@@ -69,11 +69,11 @@ Run the `PromptlyApplication` class directly.
 
 You can override default settings in `src/main/resources/application.properties` or via environment variables:
 
-| Property | Environment Variable | Description | Default |
-|---|---|---|---|
-| `openai.api.url` | `OPENAI_API_URL` | LLM provider base URL | `https://openrouter.ai/api/v1` |
-| `openai.model` | `OPENAI_MODEL` | AI model to use | `openai/gpt-4o-mini` |
-
+| Property       | Environment Variable | Description              | Default                        |
+|----------------|----------------------|--------------------------|--------------------------------|
+| `ai.base-url`  | `AI_BASE_URL`        | LLM provider base URL    | `https://openrouter.ai/api/v1` |
+| `ai.api-key`   | `AI_API_KEY`         | OpenRouter API key       | *(required)*                   |
+| `ai.model`     | `AI_MODEL`           | AI model to use          | `openai/gpt-4o-mini`           |
 ---
 
 ## Personalities

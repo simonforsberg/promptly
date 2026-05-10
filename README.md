@@ -11,7 +11,7 @@ Built with **Java 25**, **Spring Boot 4**, **Maven**, and **OpenRouter**.
 
 ## Features
 
-- **Minimalistic Chat UI**: Simple web interface for interacting with the AI.
+- **Minimalistic Chat UI**: Simple web interface with markdown rendering and syntax-highlighted code blocks. Vibe-coded with Claude.
 - **RESTful API**: Clean API endpoints for integration.
 - **Session-based Memory**: Maintains conversation context using unique session IDs.
 - **Selectable Features and Personalities**: Choose between different AI behaviors (**Assistant**, **Coder**, **Ron Burgundy**).

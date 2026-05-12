@@ -76,6 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     async function sendMessage() {
         const message = input.value.trim();
         if (!message) return;
+        const selectedPersonality = personalitySelect.value;
 
         appendMessage(message, "user");
         input.value = "";
@@ -87,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    personality: personalitySelect.value,
+                    personality: selectedPersonality,
                     message: message,
                     sessionId: sessionId
                 })
@@ -108,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
             appendMessage(
                 data.reply ?? "No response from server",
                 "ai",
-                personalityNameMap[personalitySelect.value]
+                personalityNameMap[selectedPersonality] ?? "Assistant"
             );
 
         } catch (error) {

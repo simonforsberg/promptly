@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "light") {
         document.body.classList.add("light");
-        themeToggle.textContent = "🌙 Dark mode";
+        themeToggle.textContent = "🌙";
     }
 
     // Växla tema när man klickar
@@ -19,10 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const isLight = document.body.classList.toggle("light");
 
         if (isLight) {
-            themeToggle.textContent = "🌙 Dark mode";
+            themeToggle.textContent = "🌙";
             localStorage.setItem("theme", "light");
         } else {
-            themeToggle.textContent = "☀ Light mode";
+            themeToggle.textContent = "🔆";
             localStorage.setItem("theme", "dark");
         }
     });

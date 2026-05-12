@@ -34,20 +34,38 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("sessionId", sessionId);
     }
 
-    function appendMessage(text, sender) {
+    function appendMessage(text, sender, personality = null) {
+
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("message-wrapper", sender);
+
+        if (personality && sender === "ai") {
+            const label = document.createElement("div");
+            label.classList.add("message-label");
+            label.textContent = personality;
+
+            wrapper.appendChild(label);
+        }
+
         const div = document.createElement("div");
         div.classList.add("message", sender);
+
         div.innerHTML = DOMPurify.sanitize(marked.parse(text));
-        chatWindow.appendChild(div);
+
+        wrapper.appendChild(div);
+
+        chatWindow.appendChild(wrapper);
 
         div.querySelectorAll("pre code").forEach((block) => {
             hljs.highlightElement(block);
 
             const lang = block.className.match(/language-(\w+)/)?.[1];
+
             if (lang) {
                 const label = document.createElement("span");
                 label.className = "code-lang-label";
                 label.textContent = lang;
+
                 block.parentElement.prepend(label);
             }
         });
@@ -81,7 +99,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
 
-            appendMessage(data.reply ?? "No response from server", "ai");
+            const personalityNameMap = {
+                assistant: "Assistant",
+                coder: "Coder",
+                "ron-burgundy": "Ron Burgundy"
+            };
+
+            appendMessage(
+                data.reply ?? "No response from server",
+                "ai",
+                personalityNameMap[personalitySelect.value]
+            );
 
         } catch (error) {
             console.error(error);

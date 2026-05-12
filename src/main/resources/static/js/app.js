@@ -5,6 +5,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const sendBtn = document.getElementById("sendBtn");
     const personalitySelect = document.getElementById("personality");
     const clearBtn = document.getElementById("clearBtn");
+    const themeToggle = document.getElementById("themeToggle");
+
+    // Läs sparat val från localStorage (så det håller sig vid sidladdning)
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light") {
+        document.body.classList.add("light");
+        themeToggle.textContent = "🌙 Dark mode";
+    }
+
+    // Växla tema när man klickar
+    themeToggle.addEventListener("click", () => {
+        const isLight = document.body.classList.toggle("light");
+
+        if (isLight) {
+            themeToggle.textContent = "🌙 Dark mode";
+            localStorage.setItem("theme", "light");
+        } else {
+            themeToggle.textContent = "☀ Light mode";
+            localStorage.setItem("theme", "dark");
+        }
+    });
 
     // Session
     let sessionId = localStorage.getItem("sessionId");

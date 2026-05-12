@@ -238,3 +238,14 @@ body.light .message code:not(pre code) {
     font-weight: 500;
     letter-spacing: 0.02em;
 }
+
+.message ol,
+.message ul {
+    padding-left: 24px;
+    margin: 12px 0;
+}
+
+.message li {
+    margin: 6px 0;
+    color: inherit;
+}

@@ -8,6 +8,16 @@
     --border: #1f2933;
 }
 
+body.light {
+    --bg: #e2e8f0;
+    --bg-deep: #cbd5e1;
+    --card: #f8fafc;
+    --primary: #6366f1;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #cbd5e1;
+}
+
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -25,7 +35,7 @@ body {
 
 .app-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
     padding: 20px;
 }
 
@@ -71,7 +81,9 @@ body {
 }
 
 .message {
-    max-width: 70%;
+    width: fit-content;
+    max-width: 100%;
+    overflow-wrap: anywhere;
     padding: 12px 16px;
     border-radius: 16px;
     line-height: 1.4;
@@ -125,20 +137,6 @@ body {
     opacity: 0.9;
 }
 
-.clear-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 8px 12px;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-.clear-btn:hover {
-    border-color: var(--primary);
-    color: var(--text);
-}
-
 pre {
     background: var(--bg-deep);
     padding: 2px;
@@ -174,4 +172,82 @@ pre {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     pointer-events: none;
+}
+
+body.light pre {
+    background: var(--bg-deep);
+}
+
+body.light .message code:not(pre code) {
+    background: rgba(0, 0, 0, 0.07);
+}
+
+.top-right-btn-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.clear-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clear-btn:hover {
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.theme-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+    border-color: var(--primary);
+    color: var(--text);
+}
+
+.message-wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 75%;
+    gap: 4px;
+}
+
+.message-wrapper.user {
+    align-self: flex-end;
+}
+
+.message-wrapper.ai {
+    align-self: flex-start;
+}
+
+.message-label {
+    font-size: 12px;
+    color: var(--muted);
+    padding-left: 16px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.message ol,
+.message ul {
+    padding-left: 24px;
+    margin: 12px 0;
+}
+
+.message li {
+    margin: 6px 0;
+    color: inherit;
 }

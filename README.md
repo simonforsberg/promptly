@@ -11,7 +11,7 @@ Built with **Java 25**, **Spring Boot 4**, **Maven**, and **OpenRouter**.
 
 ## Features
 
-- **Minimalistic Chat UI**: Simple web interface with markdown rendering and syntax-highlighted code blocks. Vibe-coded with Claude.
+- **Minimalistic Chat UI**: Simple web interface with Markdown rendering and syntax-highlighted code blocks. Vibe-coded with Claude.
 - **RESTful API**: Clean API endpoints for integration.
 - **Session-based Memory**: Maintains conversation context using unique session IDs.
 - **Selectable Features and Personalities**: Choose between different AI behaviors (**Assistant**, **Coder**, **Ron Burgundy**).
@@ -86,6 +86,21 @@ The `personality` field in the API request changes the system prompt:
 | `assistant`    | Assistant    | Helpful and supportive assistant, answers clearly and concisely. |
 | `coder`        | Coder        | Software engineer and coding assistant, gives technical advice.  |
 | `ron-burgundy` | Ron Burgundy | Chat with the legendary news anchor. Stay classy!                |
+
+---
+
+## User Interface
+
+Promptly features a modern, responsive chat interface built with lightweight web technologies and tightly integrated with the Spring Boot backend. The UI is rendered with HTML5, CSS3, Thymeleaf, and Vanilla JavaScript (ES6+), with `Marked.js` for Markdown rendering, `Highlight.js` for syntax highlighting, and DOMPurify for secure HTML sanitization.
+
+![promptly-coder-light](promptly-coder-light.png)
+
+- **Markdown Support**: Real-time rendering of Markdown for AI responses.
+- **Syntax Highlighting**: Properly formatted code blocks using `highlight.js`.
+- **Personality Selector**: Dynamic switching between different AI personas directly from the UI.
+- **Theme Switching**: Support for both Dark 🌙 and Light 🔆 modes.
+- **Clear History**: Easily reset the conversation context with the "Clear" button.
+- **Typography**: Uses Google Fonts with Inter for UI text and JetBrains Mono for code blocks.
 
 ---
 
